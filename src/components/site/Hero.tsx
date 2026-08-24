@@ -9,6 +9,7 @@ export function Hero() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchX = useRef<number | null>(null);
+  const active = slides[index] ?? slides[0]!;
 
   const go = useCallback((next: number) => setIndex((next + slides.length) % slides.length), []);
 
@@ -27,10 +28,10 @@ export function Hero() {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      onTouchStart={(e) => (touchX.current = e.touches[0].clientX)}
+      onTouchStart={(e) => (touchX.current = e.touches[0]?.clientX ?? null)}
       onTouchEnd={(e) => {
         if (touchX.current === null) return;
-        const dx = e.changedTouches[0].clientX - touchX.current;
+        const dx = (e.changedTouches[0]?.clientX ?? touchX.current) - touchX.current;
         if (Math.abs(dx) > 50) go(index + (dx < 0 ? 1 : -1));
         touchX.current = null;
       }}
@@ -64,26 +65,26 @@ export function Hero() {
 
       <div className="relative z-10 mx-auto flex h-full max-w-6xl items-end px-5 pb-24 sm:px-8 sm:pb-28">
         <div key={index} className="fade-up max-w-xl text-primary-foreground">
-          <p className="eyebrow text-blush">{slides[index].eyebrow}</p>
+          <p className="eyebrow text-blush">{active.eyebrow}</p>
           <h1 className="mt-4 font-display text-4xl leading-[1.05] sm:text-6xl">
-            {slides[index].title}
+            {active.title}
           </h1>
           <p className="mt-5 max-w-md text-base leading-relaxed text-primary-foreground/85">
-            {slides[index].text}
+            {active.text}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              href={slides[index].cta.href}
+              href={active.cta.href}
               className="inline-flex h-12 items-center rounded-full bg-primary px-7 text-sm tracking-wide text-primary-foreground transition-colors hover:bg-rose-deep"
             >
-              {slides[index].cta.label}
+              {active.cta.label}
             </a>
-            {slides[index].secondaryCta && (
+            {active.secondaryCta && (
               <a
-                href={slides[index].secondaryCta.href}
+                href={active.secondaryCta.href}
                 className="inline-flex h-12 items-center rounded-full border border-primary-foreground/45 px-7 text-sm tracking-wide text-primary-foreground transition-colors hover:bg-primary-foreground/12"
               >
-                {slides[index].secondaryCta.label}
+                {active.secondaryCta.label}
               </a>
             )}
           </div>
