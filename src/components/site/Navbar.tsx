@@ -119,14 +119,14 @@ export function Navbar() {
           aria-label="Navegación móvil"
           className="border-t border-border bg-background px-5 pb-8 pt-4 md:hidden"
         >
-          <ul className="flex flex-col">
+          <ul className="flex flex-col items-center text-center">
             {nav.map((item, i) => (
-              <li key={item.href} className="rule-soft first:border-t-0">
+              <li key={item.href} className="rule-soft w-full first:border-t-0">
                 <a
                   href={item.href}
                   onClick={() => setOpen(false)}
                   style={{ animationDelay: `${i * 55}ms` }}
-                  className="slide-in-left block py-4 font-display text-2xl text-foreground transition-colors hover:text-primary"
+                  className="slide-in-left block py-4 font-display text-2xl text-foreground transition-colors hover:text-primary hover:bg-primary/5"
                 >
                   {item.label}
                 </a>
