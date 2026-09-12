@@ -32,7 +32,7 @@ export function Navbar() {
           : "bg-transparent",
       )}
     >
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5 sm:px-8">
+      <div className="relative mx-auto flex h-20 max-w-6xl items-center justify-between px-5 sm:px-8">
         {/* Espacio reservado para el logo definitivo */}
         <a href="#inicio" className="flex flex-col leading-none" aria-label={`${brand.name} — inicio`}>
           {brand.logoSrc ? (
@@ -61,7 +61,7 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Navegación principal">
           {nav.map((item) => (
-            <a
+            
               key={item.href}
               href={item.href}
               className={cn(
@@ -94,23 +94,23 @@ export function Navbar() {
               </span>
             )}
           </button>
-
-          <button
-            type="button"
-            onClick={() => setOpen((v) => !v)}
-            aria-expanded={open}
-            aria-controls="menu-movil"
-            aria-label={open ? "Cerrar menú" : "Abrir menú"}
-            className={cn(
-              "grid h-11 w-11 place-items-center rounded-full border transition-colors md:hidden",
-              scrolled || open
-                ? "border-border text-foreground"
-                : "border-primary-foreground/50 text-primary-foreground",
-            )}
-          >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls="menu-movil"
+          aria-label={open ? "Cerrar menú" : "Abrir menú"}
+          className={cn(
+            "absolute left-1/2 top-1/2 grid h-11 w-11 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border transition-all duration-300 md:hidden",
+            scrolled || open
+              ? "border-border text-foreground hover:border-primary hover:text-primary hover:bg-primary/10"
+              : "border-primary-foreground/50 text-primary-foreground hover:border-primary-foreground hover:bg-primary-foreground/10",
+          )}
+        >
+          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
 
       {open && (
@@ -122,7 +122,7 @@ export function Navbar() {
           <ul className="flex flex-col">
             {nav.map((item, i) => (
               <li key={item.href} className="rule-soft first:border-t-0">
-                <a
+                
                   href={item.href}
                   onClick={() => setOpen(false)}
                   style={{ animationDelay: `${i * 55}ms` }}
