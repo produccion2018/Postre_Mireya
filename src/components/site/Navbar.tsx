@@ -61,7 +61,7 @@ export function Navbar() {
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Navegación principal">
           {nav.map((item) => (
-            
+            <a
               key={item.href}
               href={item.href}
               className={cn(
@@ -122,7 +122,7 @@ export function Navbar() {
           <ul className="flex flex-col">
             {nav.map((item, i) => (
               <li key={item.href} className="rule-soft first:border-t-0">
-                
+                <a
                   href={item.href}
                   onClick={() => setOpen(false)}
                   style={{ animationDelay: `${i * 55}ms` }}
