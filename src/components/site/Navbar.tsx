@@ -126,7 +126,7 @@ export function Navbar() {
                   href={item.href}
                   onClick={() => setOpen(false)}
                   style={{ animationDelay: `${i * 55}ms` }}
-                  className="slide-in-left block py-4 font-display text-2xl text-foreground transition-colors hover:text-primary hover:bg-primary/5"
+                  className="slide-in-left block w-full rounded-xl py-4 font-display text-2xl text-foreground transition-colors duration-150 hover:text-primary hover:bg-primary/5 active:text-primary active:bg-primary/10"
                 >
                   {item.label}
                 </a>
