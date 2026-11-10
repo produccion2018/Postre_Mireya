@@ -1,4 +1,7 @@
+import { useEffect, type CSSProperties } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { CalendarCheck, HandHeart, Leaf } from "lucide-react";
+import { products } from "@/content/site";
 import { Toaster } from "@/components/ui/sonner";
 import { CartProvider } from "@/lib/cart";
 import { Navbar } from "@/components/site/Navbar";
@@ -33,32 +36,125 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function Presentacion() {
+/** Intro: cortina crema con la firma de Mireya (solo en la primera carga). */
+function Intro() {
+  const first = "Postres".split("");
+  const second = "Mireya".split("");
   return (
-    <section className="bg-background py-20 sm:py-28">
-      <div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-8 lg:grid-cols-[4fr_5fr] lg:items-end">
+    <div className="pm-intro" aria-hidden="true">
+      <div className="flex flex-col items-center text-center">
+        <p
+          className="pm-intro-char text-[0.65rem] uppercase tracking-[0.5em] text-stone"
+          style={{ "--i": 0 } as CSSProperties}
+        >
+          Repostería artesanal
+        </p>
+        <p className="mt-4 font-display text-6xl font-light leading-none text-cacao sm:text-8xl">
+          {first.map((ch, i) => (
+            <span key={`a${i}`} className="pm-intro-char" style={{ "--i": i + 1 } as CSSProperties}>
+              {ch}
+            </span>
+          ))}{" "}
+          <em className="italic text-rose-deep">
+            {second.map((ch, i) => (
+              <span
+                key={`b${i}`}
+                className="pm-intro-char"
+                style={{ "--i": i + 9 } as CSSProperties}
+              >
+                {ch}
+              </span>
+            ))}
+          </em>
+        </p>
+        <div className="pm-line mt-6 w-56" />
+      </div>
+    </div>
+  );
+}
+
+const pillars = [
+  {
+    icon: HandHeart,
+    title: "Hecho a mano",
+    text: "Batidos a mano y decoración cuidada, pieza por pieza.",
+  },
+  {
+    icon: CalendarCheck,
+    title: "Por encargo",
+    text: "Se hornea cuando lo pedís, nunca queda en vitrina.",
+  },
+  { icon: Leaf, title: "Ingredientes frescos", text: "Rellenos del día y fruta de estación." },
+];
+
+function Presentacion() {
+  const names = products.map((p) => p.name);
+  const loop = [...names, ...names];
+
+  return (
+    <section className="relative overflow-hidden bg-background">
+      <div className="mx-auto max-w-6xl px-5 pb-20 pt-24 sm:px-8 sm:pb-24 sm:pt-32">
         <Reveal>
-          <div>
-            <p className="eyebrow">Postres Mireya</p>
-            <h2 className="mt-3 font-display text-3xl leading-tight sm:text-4xl">
-              Repostería de casa, con tiempo y paciencia
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="eyebrow inline-flex items-center gap-3">
+              <span className="h-px w-8 bg-gold" /> Postres Mireya{" "}
+              <span className="h-px w-8 bg-gold" />
+            </p>
+            <h2 className="mt-6 font-display text-4xl font-light leading-[1.1] sm:text-6xl">
+              Repostería de casa, con <em className="italic text-rose-deep">tiempo</em> y paciencia
             </h2>
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+              Todo se hornea por encargo: batidos a mano, rellenos frescos y decoración cuidada. Un
+              menú corto, pensado para que cada postre salga como debe salir.
+            </p>
           </div>
         </Reveal>
-        <Reveal delay={120}>
-          <p className="text-base leading-relaxed text-muted-foreground">
-            Todo se hornea por encargo: batidos a mano, rellenos frescos y decoración cuidada. Un
-            menú corto, pensado para que cada postre salga como debe salir.
-          </p>
-        </Reveal>
+
+        <div className="mt-16 grid gap-5 sm:grid-cols-3">
+          {pillars.map((p, i) => (
+            <Reveal key={p.title} delay={i * 120}>
+              <div className="group h-full rounded-[1.75rem] border border-border/70 bg-card p-7 text-center shadow-soft transition-all duration-500 hover:-translate-y-2 hover:border-gold/60 hover:shadow-lift">
+                <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-blush text-rose-deep transition-all duration-500 group-hover:rotate-12 group-hover:bg-rose-deep group-hover:text-primary-foreground">
+                  <p.icon className="h-6 w-6" aria-hidden="true" />
+                </span>
+                <h3 className="mt-5 font-display text-2xl">{p.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{p.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
+
+      {/* Cinta infinita con el menú */}
+      <div className="-rotate-1 border-y border-gold/40 bg-cacao py-5">
+        <div className="pm-marquee">
+          {loop.map((n, i) => (
+            <span
+              key={i}
+              className="flex items-center gap-8 pr-8 font-display text-2xl font-light italic text-primary-foreground sm:text-3xl"
+            >
+              {n}
+              <span className="text-base not-italic text-gold">✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="h-16" />
     </section>
   );
 }
 
 function Index() {
+  useEffect(() => {
+    const root = document.documentElement;
+    if (root.classList.contains("pm-ready")) return;
+    const t = window.setTimeout(() => root.classList.add("pm-ready"), 3000);
+    return () => window.clearTimeout(t);
+  }, []);
+
   return (
     <CartProvider>
+      <Intro />
       <a
         href="#menu"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-full focus:bg-primary focus:px-5 focus:py-3 focus:text-sm focus:text-primary-foreground"

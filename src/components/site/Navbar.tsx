@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import { Menu, ShoppingBag, X } from "lucide-react";
 import { brand, nav } from "@/content/site";
 import { useCart } from "@/lib/cart";
@@ -26,15 +26,26 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled || open
-          ? "bg-background/92 border-b border-border backdrop-blur-md"
-          : "bg-transparent",
+        "pm-fade fixed inset-x-0 top-0 z-50 transition-all duration-500",
+        scrolled && !open ? "px-3 pt-3" : "px-0 pt-0",
       )}
+      style={{ "--d": 100 } as CSSProperties}
     >
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5 sm:px-8">
+      <div
+        className={cn(
+          "mx-auto flex max-w-6xl items-center justify-between px-5 transition-all duration-500 sm:px-8",
+          scrolled || open
+            ? "h-16 rounded-full border border-border/70 bg-background/92 shadow-[0_20px_50px_-25px_oklch(0.31_0.045_40/0.45)] backdrop-blur-xl"
+            : "h-24 border border-transparent",
+          open && "rounded-none",
+        )}
+      >
         {/* Espacio reservado para el logo definitivo */}
-        <a href="#inicio" className="flex flex-col leading-none" aria-label={`${brand.name} — inicio`}>
+        <a
+          href="#inicio"
+          className="flex flex-col leading-none"
+          aria-label={`${brand.name} — inicio`}
+        >
           {brand.logoSrc ? (
             <img src={brand.logoSrc} alt={brand.name} className="h-9 w-auto" />
           ) : (
@@ -45,7 +56,7 @@ export function Navbar() {
                   scrolled || open ? "text-foreground" : "text-primary-foreground",
                 )}
               >
-                Postres <em className="not-italic text-primary">Mireya</em>
+                Postres <em className="italic text-primary">Mireya</em>
               </span>
               <span
                 className={cn(
@@ -65,8 +76,10 @@ export function Navbar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative text-sm tracking-wide transition-colors after:absolute after:-bottom-1.5 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full",
-                scrolled ? "text-foreground hover:text-primary" : "text-primary-foreground",
+                "relative text-sm tracking-wide transition-colors after:absolute after:-bottom-1.5 after:left-1/2 after:h-px after:w-0 after:-translate-x-1/2 after:bg-gold after:transition-all after:duration-300 hover:after:w-full",
+                scrolled
+                  ? "text-foreground hover:text-rose-deep"
+                  : "text-primary-foreground/90 hover:text-gold",
               )}
             >
               {item.label}
@@ -80,16 +93,19 @@ export function Navbar() {
             onClick={() => setCartOpen(true)}
             aria-label={`Abrir pedido, ${count} artículos`}
             className={cn(
-              "relative inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm transition-colors",
+              "pm-shine relative inline-flex h-11 items-center gap-2 rounded-full px-5 text-sm transition-all duration-300 hover:-translate-y-0.5",
               scrolled || open
-                ? "bg-primary text-primary-foreground hover:bg-rose-deep"
-                : "bg-background/85 text-foreground hover:bg-background",
+                ? "bg-cacao text-primary-foreground shadow-[0_12px_30px_-12px_var(--color-cacao)] hover:bg-rose-deep"
+                : "border border-primary-foreground/30 bg-primary-foreground/10 text-primary-foreground backdrop-blur-md hover:border-gold hover:bg-gold hover:text-cacao",
             )}
           >
             <ShoppingBag className="h-4 w-4" aria-hidden="true" />
             <span className="hidden sm:inline">Pedir en línea</span>
             {count > 0 && (
-              <span className="grid h-5 min-w-5 place-items-center rounded-full bg-cacao px-1 text-[0.65rem] text-primary-foreground">
+              <span
+                key={count}
+                className="pm-pop grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[0.65rem] text-primary-foreground"
+              >
                 {count}
               </span>
             )}

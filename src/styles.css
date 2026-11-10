@@ -49,6 +49,7 @@
   --color-rose: var(--rose);
   --color-rose-deep: var(--rose-deep);
   --color-cacao: var(--cacao);
+  --color-gold: var(--gold);
   --color-stone: var(--stone);
   --color-stone-soft: var(--stone-soft);
   --color-footer: var(--footer);
@@ -67,6 +68,7 @@
   --rose: oklch(0.7 0.115 12);
   --rose-deep: oklch(0.55 0.115 10);
   --cacao: oklch(0.31 0.045 40);
+  --gold: oklch(0.8 0.09 80);
   --stone: oklch(0.44 0.008 60);
   --stone-soft: oklch(0.93 0.004 80);
 
@@ -170,7 +172,218 @@
   }
 }
 
+/* ───────────── Postres Mireya · diseño premium ───────────── */
+
+:root {
+  --pm-base: 2.1s;
+}
+:root.pm-ready {
+  --pm-base: 0s;
+}
+:root.pm-ready .pm-intro {
+  display: none;
+}
+
+/* Intro: cortina crema con la firma */
+.pm-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--color-cream);
+  animation: pm-curtain 1s cubic-bezier(0.76, 0, 0.24, 1) 1.8s forwards;
+}
+@keyframes pm-curtain {
+  to {
+    transform: translateY(-100%);
+    border-bottom-left-radius: 50% 12%;
+    border-bottom-right-radius: 50% 12%;
+    visibility: hidden;
+  }
+}
+.pm-intro-char {
+  display: inline-block;
+  animation: pm-char 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.2s + var(--i) * 55ms);
+}
+@keyframes pm-char {
+  from {
+    opacity: 0;
+    transform: translateY(0.5em) rotate(6deg);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+.pm-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  transform-origin: center;
+  animation: pm-line 1s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
+}
+@keyframes pm-line {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.pm-fade {
+  animation: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--pm-base) + var(--d, 0) * 1ms);
+}
+
+/* Palabras del título que suben desde una máscara */
+.pm-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.pm-word > span {
+  display: inline-block;
+  animation: pm-word 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--pm-base) + 0.15s + var(--i) * 70ms);
+}
+@keyframes pm-word {
+  from {
+    transform: translateY(110%) rotate(4deg);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Barra de progreso del carrusel */
+.pm-progress {
+  transform-origin: left;
+  animation: pm-progress linear both;
+}
+@keyframes pm-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Sello giratorio */
+.pm-spin {
+  animation: pm-spin 18s linear infinite;
+}
+@keyframes pm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Indicador de scroll */
+.pm-scroll {
+  position: relative;
+  overflow: hidden;
+}
+.pm-scroll::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -40%;
+  width: 100%;
+  height: 40%;
+  background: var(--color-gold);
+  animation: pm-scroll 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes pm-scroll {
+  to {
+    top: 100%;
+  }
+}
+
+/* Brillo que cruza botones */
+.pm-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.pm-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 30%, oklch(1 0 0 / 40%) 50%, transparent 70%);
+  transform: translateX(-120%);
+  animation: pm-sweep 3.5s ease-in-out infinite;
+}
+@keyframes pm-sweep {
+  0%,
+  45% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+/* Cinta infinita */
+.pm-marquee {
+  display: flex;
+  width: max-content;
+  animation: pm-marquee 38s linear infinite;
+}
+.pm-marquee:hover {
+  animation-play-state: paused;
+}
+@keyframes pm-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Flotación suave */
+.pm-float {
+  animation: pm-float 6s ease-in-out infinite;
+}
+@keyframes pm-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Textura de puntos sutil */
+.pm-dots {
+  background-image: radial-gradient(oklch(0.55 0.115 10 / 12%) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+.pm-pop {
+  animation: pm-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@keyframes pm-pop {
+  0% {
+    transform: scale(0.6);
+  }
+  60% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .pm-intro {
+    display: none;
+  }
   *,
   *::before,
   *::after {
