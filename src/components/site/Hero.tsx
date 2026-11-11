@@ -51,7 +51,10 @@ export function Hero() {
       id="inicio"
       aria-roledescription="carrusel"
       aria-label="Presentación de Postres Mireya"
-      onMouseEnter={() => setPaused(true)}
+      onMouseEnter={() => {
+        // En el recorrido automático del portfolio el carrusel no se frena con el mouse
+        if (!window.location.search.includes("tour")) setPaused(true);
+      }}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}

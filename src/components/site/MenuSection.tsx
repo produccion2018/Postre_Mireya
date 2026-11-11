@@ -134,7 +134,7 @@ export function MenuSection() {
           ))}
         </div>
 
-        <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+        <div id="menu-cards" className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
           {visible.map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
           ))}

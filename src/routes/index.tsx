@@ -1,4 +1,4 @@
-import { useEffect, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CalendarCheck, HandHeart, Leaf } from "lucide-react";
 import { products } from "@/content/site";
@@ -92,7 +92,7 @@ function Presentacion() {
   const loop = [...names, ...names];
 
   return (
-    <section className="relative overflow-hidden bg-background">
+    <section id="presentacion" className="relative overflow-hidden bg-background">
       <div className="mx-auto max-w-6xl px-5 pb-20 pt-24 sm:px-8 sm:pb-24 sm:pt-32">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
@@ -144,7 +144,75 @@ function Presentacion() {
   );
 }
 
+/* ───────── Recorrido automático (?tour=1, lo usa el portfolio) ─────────
+   Ejecuta un paso cada `interval` ms. Si el usuario hace clic, scroll o toca la
+   pantalla, se pausa y retoma solo después de unos segundos sin actividad. */
+function useDemoTour(steps: Array<() => void>, interval = 3600, startDelay = 3200) {
+  const [active, setActive] = useState(false);
+  const stepsRef = useRef(steps);
+  stepsRef.current = steps;
+
+  useEffect(() => {
+    if (!new URLSearchParams(window.location.search).has("tour")) return;
+    setActive(true);
+    let i = 0;
+    let paused = false;
+    let idle = 0;
+    let timer = 0;
+    const onUser = () => {
+      paused = true;
+      window.clearTimeout(idle);
+      idle = window.setTimeout(() => (paused = false), 9000);
+    };
+    const evs = ["wheel", "touchstart", "mousedown", "keydown"] as const;
+    evs.forEach((e) => window.addEventListener(e, onUser, { passive: true }));
+    const start = window.setTimeout(() => {
+      timer = window.setInterval(() => {
+        if (paused) return;
+        const list = stepsRef.current;
+        list[i % list.length]?.();
+        i++;
+      }, interval);
+    }, startDelay);
+    return () => {
+      window.clearTimeout(start);
+      window.clearInterval(timer);
+      window.clearTimeout(idle);
+      evs.forEach((e) => window.removeEventListener(e, onUser));
+    };
+  }, [interval, startDelay]);
+
+  return active;
+}
+
+const goTo = (id: string) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  window.scrollTo({
+    top: el.getBoundingClientRect().top + window.scrollY - 70,
+    behavior: "smooth",
+  });
+};
+const top = () => window.scrollTo({ top: 0, behavior: "smooth" });
+const menuFilter = (n: number) =>
+  document.querySelectorAll<HTMLButtonElement>('#menu [role="group"] button')[n]?.click();
+
 function Index() {
+  const touring = useDemoTour([
+    () => top(),
+    () => {},
+    () => goTo("presentacion"),
+    () => goTo("menu"),
+    () => menuFilter(1),
+    () => goTo("menu-cards"),
+    () => menuFilter(2),
+    () => menuFilter(3),
+    () => menuFilter(0),
+    () => goTo("sobre-mi"),
+    () => goTo("galeria"),
+    () => goTo("contacto"),
+  ]);
+
   useEffect(() => {
     const root = document.documentElement;
     if (root.classList.contains("pm-ready")) return;
@@ -155,6 +223,12 @@ function Index() {
   return (
     <CartProvider>
       <Intro />
+      {touring && (
+        <div className="pointer-events-none fixed bottom-5 left-1/2 z-[60] -translate-x-1/2 rounded-full border border-gold/50 bg-cacao/85 px-4 py-2 text-xs text-primary-foreground shadow-lift backdrop-blur-md">
+          <span className="mr-2 inline-block h-2 w-2 animate-pulse rounded-full bg-gold align-middle" />
+          Recorrido automático · tocá para explorar
+        </div>
+      )}
       <a
         href="#menu"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:rounded-full focus:bg-primary focus:px-5 focus:py-3 focus:text-sm focus:text-primary-foreground"
